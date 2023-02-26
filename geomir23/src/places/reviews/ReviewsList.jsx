@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { Review } from "./Review";
 
 import { useContext } from "react";
-import { UserContext } from "../../userContext";
+import { UserContext } from "../../usercontext";
 
 import { useState } from "react";
 import { ReviewAdd } from "./ReviewAdd";
-import { ReviewsContext } from "./reviewsContext";
+import { ReviewsContext } from "./reviewscontext";
 // Fem servir un context únicament dins de tots els components de Reviews
 
 export const ReviewsList = ({ id, reviews_count }) => {

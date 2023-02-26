@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../userContext";
+import { UserContext } from "../usercontext";
 
-// Temporal
-//import places from '../../json/places.json'
-//import users from '../../json/users.json'
 import { PostsAdd } from "./PostsAdd";
 import { useEffect } from "react";
 import { PostList } from "./PostList";
+import { useFetch } from "../hooks/useFetch";
 
 export const PostsList = () => {
   // desa el retorn de dades de l'api places
-  let [posts, setPosts] = useState([]);
+  //let [posts, setPosts] = useState([]);
   // Ho utilitzem per provar un refresc quan esborrem un element
   let [refresh, setRefresh] = useState(false);
   // Dades del context. Ens cal el token per poder fer les crides a l'api
@@ -19,25 +17,17 @@ export const PostsList = () => {
 
   // només quan la vble d'estat refresca canvia el seu valor
   // refresca canviarà el valor quan fem alguna operació com delete
-  useEffect(() => {
-    // Crida a l'api. mètode GET
-    fetch("https://backend.insjoaquimmir.cat/api/posts", {
-      // mode: 'cors',
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + authToken,
-      },
-      method: "GET",
-    })
-      .then((data) => data.json())
-      .then((resposta) => {
-        // Faria falta control·lar possible error
-        console.log(resposta.data);
-        // Actualitzem la vble d'estat places
-        setPosts(resposta.data);
-      });
-  }, [refresh]); // condició d'execució del useffect
+  // Crida a l'api. mètode GET
+  const { data, error, loading} = useFetch("https://backend.insjoaquimmir.cat/api/posts", {
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + authToken,
+    },
+    method: "GET",
+  })
+ 
+   // condició d'execució del useffect
 
   // Esborrar un element
   const deletePost = (id, e) => {
@@ -137,8 +127,8 @@ export const PostsList = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {posts.map((v) => {
+                <tbody> 
+                  {loading ? "Espera..." : <>{data.map((v) => {
                     return (
             
                       <>
@@ -146,7 +136,8 @@ export const PostsList = () => {
                   
                       </>
                       )
-                  })}
+                  })}</>}
+                  
 
                   {/* <tr className="bg-white border-b">
             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>

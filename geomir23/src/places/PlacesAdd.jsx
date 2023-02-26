@@ -1,7 +1,7 @@
 import React from 'react'
 import { useContext } from 'react';
 import { useState } from 'react';
-import { UserContext } from '../userContext';
+import { UserContext } from '../usercontext';
 import 'leaflet/dist/leaflet.css';
 
 import "../App.css"

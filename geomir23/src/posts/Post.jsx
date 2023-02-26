@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { UserContext } from "../userContext";
+import { UserContext } from "../usercontext";
 import "leaflet/dist/leaflet.css";
 
 import "../App.css";

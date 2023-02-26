@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Comment } from "./Comment";
 
 import { useContext } from "react";
-import { UserContext } from "../../userContext";
+import { UserContext } from "../../usercontext";
 
 import { useState } from "react";
 import { CommentAdd } from "./CommentAdd";

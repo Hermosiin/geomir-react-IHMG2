@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
-import { UserContext } from "../../userContext";
-import { ReviewsContext } from "./reviewsContext";
+import { UserContext } from "../../usercontext";
+import { ReviewsContext } from "./reviewscontext";
 
 import TimeAgo from "react-timeago";
 import catStrings from "react-timeago/lib/language-strings/ca";
@@ -12,6 +12,8 @@ export const Review = ({ review }) => {
   let { setAdd, setRefresca, reviewsCount, setReviewsCount } =
     useContext(ReviewsContext);
   const formatter = buildFormatter(catStrings);
+
+  console.log(review)
 
   const deleteReview = async (id, e) => {
     const headers = {
