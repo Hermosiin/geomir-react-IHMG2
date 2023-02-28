@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { UserContext } from '../usercontext';
 import { useForm } from '../hooks/useForm';
+import { useLogin } from '../hooks/useLogin';
 
 export const Login = ({ setLogin }) => {
 
@@ -15,43 +16,48 @@ export const Login = ({ setLogin }) => {
     password: "",
     });
     const {email,password} = formState;
+
+    const {doLogin} = useLogin();
+
+    // UNA VEZ CREADO EL HOOK DEL TOKEN YA NO ME HACE FALTA EL CHECKLOGIN PORQUE YA LO HAGO AHI EN LA FUNCION DOLOGIN
   
-  const check_login = (e) =>  {
+//   const check_login = (e) =>  {
 
-    e.preventDefault();
+//     e.preventDefault();
 
-    console.log("Comprovant credencials....")
-    // Enviam dades a l'aPI i recollim resultat
-    fetch ("https://backend.insjoaquimmir.cat/api/login",{
+//     console.log("Comprovant credencials....")
+//     // Enviam dades a l'aPI i recollim resultat
+//     fetch ("https://backend.insjoaquimmir.cat/api/login",{
         
-         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            //"Access-Control-Allow-Origin": "*"  
-        },
-        method: "POST",
-        body: JSON.stringify({email: email, password: password})
-    }
-    ).then( data => data.json() )
-    .then (resposta => { 
+//          headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//             //"Access-Control-Allow-Origin": "*"  
+//         },
+//         method: "POST",
+//         body: JSON.stringify({email: email, password: password})
+//     }
+//     ).then( data => data.json() )
+//     .then (resposta => { 
         
-            console.log(resposta); 
-            if (resposta.success == true )
-            {
-                setUsuari(email);
-                console.log(usuari)
-                setAuthToken(resposta.authToken);    
-            }
-            else
-            { 
-                console.log(resposta)
-                setError(resposta.message);
-            }
-        } ) 
-    .catch((data) => {
-        setError("Network error")
-    });
-  }
+//             console.log(resposta); 
+//             if (resposta.success == true )
+//             {
+//                 setUsuari(email);
+//                 console.log(usuari)
+//                 setAuthToken(resposta.authToken);
+ 
+//             }
+//             else
+//             { 
+//                 console.log(resposta)
+//                 setError(resposta.message);
+//             }
+//         } ) 
+//     .catch((data) => {
+//         setError("Network error")
+//     });
+//   }
   return (
     
    <section
@@ -71,7 +77,7 @@ export const Login = ({ setLogin }) => {
                     <a href="#" className="font-medium text-gray-400 hover:text-gray-500">FORGOT?</a>
                 </div>
                 { error ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-red-50 px-4 ring-2 ring-red-200 ">{error}</div>) : (<></>)  }
-                <button onClick={ (e) => { check_login(e) }}
+                <button onClick={ () => { doLogin(formState) }}
                     className="w-full rounded-2xl border-b-4 border-b-blue-600 bg-blue-500 py-3 font-bold text-white hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
                     LOG IN
                 </button>

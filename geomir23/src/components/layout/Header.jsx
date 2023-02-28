@@ -75,6 +75,7 @@ export const Header = () => {
                 {
                     console.log(resposta); 
                     setAuthToken("");
+                    localStorage.setItem('authToken', "");
                   
                 }
                 
