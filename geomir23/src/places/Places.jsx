@@ -6,7 +6,7 @@ import { PlacesAdd } from './PlacesAdd';
 import { PlacesGrid } from './PlacesGrid';
 import { PlacesList } from './PlacesList';
 import { PlacesMenu } from './PlacesMenu';
-import { PlacesShow } from './PlacesShow';
+import { Place } from './Place';
 
 
 export const Places = () => {

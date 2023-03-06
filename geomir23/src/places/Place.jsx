@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { UserContext } from "../usercontext";
 import "leaflet/dist/leaflet.css";
 
@@ -13,9 +13,23 @@ import { Marker, Popup, MapContainer, TileLayer, useMap } from "react-leaflet";
 import { PlacesMenu } from "./PlacesMenu";
 import { ReviewAdd } from "./reviews/ReviewAdd";
 import { ReviewsList } from "./reviews/ReviewsList";
+import placesMarksReducer from './placesMarksReducer';
 // import { MarkerLayer, Marker } from "react-leaflet-marker";
 
-export const PlacesShow = () => {
+const initialState = [];
+
+const init = ()=> {
+
+    return JSON.parse(localStorage.getItem("marks")) || []
+
+}
+
+
+export const Place = () => {
+
+  const [marks, dispatchPlaces] = useReducer(placesMarksReducer, initialState,init);
+  const { pathname } = useLocation()
+
   const { id } = useParams();
 
   let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
@@ -32,6 +46,9 @@ export const PlacesShow = () => {
   let [favorited, setFavorited] = useState(false);
   let [favorites, setFavorites] = useState(0)
 
+  useEffect(() => {
+    localStorage.setItem("marks", JSON.stringify(marks));
+  }, [marks]);
 
   const unfavourite = async () => {
 
@@ -201,9 +218,31 @@ export const PlacesShow = () => {
     }
   };
 
+
+  const markPlace = (place) => {
+    console.log("Afegeixo");
+    console.log({ place });
+
+    const mark = {
+        id: new Date().getTime(),
+        name: place.name,
+        description: place.description,
+        ruta: pathname
+    };
+
+    const action = {
+        type: "Add Mark",
+        payload: mark
+    };
+    console.log(mark)
+    dispatchPlaces(action);
+
+    alert('HAS GUARDADO EL PLACE EN MARKS')
+};
+
   return (
     <>
-      {/* PlacesShow { id } */}
+      {/* Place { id } */}
 
       {/* Només es renderitza quan isLoading es false */}
       {isLoading ? (
@@ -255,6 +294,7 @@ export const PlacesShow = () => {
   </Marker>
 </MapContainer> */}
 
+                <button type="submit" onClick={() => markPlace(place)}>DESAR</button>
                 {place.author.email === usuari ? (
                   <>
                     <Link

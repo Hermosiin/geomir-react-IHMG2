@@ -9,7 +9,7 @@ import { Routes,Route } from 'react-router-dom'
 import { Header } from './components/layout/Header'
 import { Footer } from './components/layout/Footer'
 import { Places } from './places/Places'
-import { PlacesShow } from './places/PlacesShow'
+import { Place } from './places/Place'
 import { About } from './components/aplicacio/About'
 import { NotFound } from './components/aplicacio/NotFound'
 import { PlaceEdit } from './places/PlaceEdit'
@@ -27,6 +27,7 @@ import { Post } from './posts/Post'
 import { PostEdit } from './posts/PostEdit'
 
 import { ToDos } from './todos/ToDos'
+import PlaceMarks from './places/PlaceMarks';
 
 
 // "leaflet": "^1.9.3",
@@ -62,7 +63,8 @@ function App() {
             <Route path="/places/grid" element={ <><PlacesMenu/><PlacesGrid /></> } /> 
             <Route path="/places/add" element={ <><PlacesMenu/><PlacesAdd /></> } /> 
             <Route path="/places/edit/:id" element={  <><PlacesMenu/><PlaceEdit /></> } />
-            <Route path="/places/:id" element={ <><PlacesMenu/><PlacesShow /></> } /> 
+            <Route path="/places/:id" element={ <><PlacesMenu/><Place /></> } /> 
+            <Route path="/places/marks" element={<> <PlacesMenu/><PlaceMarks/></>} />
 
             <Route path="/posts" element={<Posts/>} />
             <Route path="/posts/list" element={ <><PostsMenu/><PostsList/></> } /> 
@@ -74,7 +76,7 @@ function App() {
             
             
              {/* <Route path="/posts" element={ <Places />} />
-            <Route path="/posts/:id" element={<PlacesShow />} /> */}
+            <Route path="/posts/:id" element={<Place />} /> */}
             <Route path="/about" element={<About />} />
             <Route path="/todos" element={<ToDos />} />
         </Routes>

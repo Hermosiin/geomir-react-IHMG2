@@ -25,6 +25,9 @@ export const PlacesMenu = () => {
     <button onClick={()=>{ navega("/places/list")}}  className={ !qui ? "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-500 hover:bg-orange-700" : "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-200 hover:bg-orange-700" }>
     Llista
     </button>
+    <button onClick={()=>{ navega("/places/marks")}}  className={ !qui ? "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-500 hover:bg-orange-700" : "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-200 hover:bg-orange-700" }>
+    Marks
+    </button>
     {/* <button onClick={()=> { setQui(true); setGrid(false)}}  className={ qui ? "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-500 hover:bg-orange-700" : "text-white font-bold py-2 px-4 h-10 md:h-10 bg-orange-200 hover:bg-orange-700" }>
     Llista
     </button> */}
