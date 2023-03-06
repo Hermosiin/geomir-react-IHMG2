@@ -20,7 +20,7 @@ const initialState = [];
 
 const init = ()=> {
 
-    return JSON.parse(localStorage.getItem("marks")) || []
+    return JSON.parse(localStorage.getItem("marksPlaces")) || []
 
 }
 
@@ -47,7 +47,7 @@ export const Place = () => {
   let [favorites, setFavorites] = useState(0)
 
   useEffect(() => {
-    localStorage.setItem("marks", JSON.stringify(marks));
+    localStorage.setItem("marksPlaces", JSON.stringify(marks));
   }, [marks]);
 
   const unfavourite = async () => {

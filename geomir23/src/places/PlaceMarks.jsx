@@ -6,7 +6,7 @@ const initialState = [];
 
 const init = ()=> {
 
-    return JSON.parse(localStorage.getItem("marks")) || []
+    return JSON.parse(localStorage.getItem("marksPlaces")) || []
 }
 
 const PlaceMarks = () => {
@@ -14,7 +14,7 @@ const PlaceMarks = () => {
     const [marks, dispatchPlaces] = useReducer(placesMarksReducer, initialState,init);
 
     useEffect(() => {
-        localStorage.setItem("marks", JSON.stringify(marks));
+        localStorage.setItem("marksPlaces", JSON.stringify(marks));
       }, [marks]);
 
     const handleDeleteMark = (id) => {

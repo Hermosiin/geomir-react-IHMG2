@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { UserContext } from "../usercontext";
 import "leaflet/dist/leaflet.css";
 
@@ -13,9 +13,21 @@ import { Marker, Popup, MapContainer, TileLayer, useMap } from "react-leaflet";
 import { PostsMenu } from "./PostsMenu";
 import { CommentAdd } from "./comments/CommentAdd";
 import { CommentsList } from "./comments/CommentsList";
+import postsMarksReducer from './postsMarksReducer';
 // import { MarkerLayer, Marker } from "react-leaflet-marker";
 
+const initialState = [];
+
+const init = ()=> {
+
+    return JSON.parse(localStorage.getItem("marksPost")) || []
+
+}
+
 export const Post = () => {
+  const [marks, dispatchPosts] = useReducer(postsMarksReducer, initialState,init);
+  const { pathname } = useLocation()
+
   const { id } = useParams();
 
   let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
@@ -31,6 +43,10 @@ export const Post = () => {
   let [isLoading, setIsLoading] = useState(true);
   let [liked, setLiked] = useState(false);
   let [likes, setLikes] = useState(0);
+
+  useEffect(() => {
+    localStorage.setItem("marksPost", JSON.stringify(marks));
+  }, [marks]);
 
   const unlike = async () => {
     setLiked(false);
@@ -193,9 +209,30 @@ export const Post = () => {
     }
   };
 
+  const markPost = (post) => {
+    console.log("Afegeixo");
+    console.log({ post });
+
+    const mark = {
+        id: new Date().getTime(),
+        body: post.body,
+        ruta: pathname
+    };
+
+    const action = {
+        type: "Add Mark",
+        payload: mark
+    };
+    console.log(mark)
+    dispatchPosts(action);
+
+    alert('HAS GUARDADO EL POST EN MARKS')
+    
+};
+
   return (
     <>
-      {/* PlacesShow { id } */}
+      {/* PostsShow { id } */}
 
       {/* Només es renderitza quan isLoading es false */}
       {isLoading ? (
@@ -246,7 +283,7 @@ export const Post = () => {
     </Popup>
   </Marker>
 </MapContainer> */}
-
+                <button type="submit" onClick={() => markPost(post)}>DESAR</button>
                 {post.author.email === usuari ? (
                   <>
                     <Link
