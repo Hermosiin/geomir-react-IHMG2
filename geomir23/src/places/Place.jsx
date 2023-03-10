@@ -14,20 +14,29 @@ import { PlacesMenu } from "./PlacesMenu";
 import { ReviewAdd } from "./reviews/ReviewAdd";
 import { ReviewsList } from "./reviews/ReviewsList";
 import placesMarksReducer from './placesMarksReducer';
+
+import { addplacemark } from "../slices/placeMarkSlice";
+import { ismarked } from "../slices/placeMarkSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 // import { MarkerLayer, Marker } from "react-leaflet-marker";
 
-const initialState = [];
+//reducer
+// const initialState = [];
 
-const init = ()=> {
+// const init = ()=> {
 
-    return JSON.parse(localStorage.getItem("marksPlaces")) || []
+//     return JSON.parse(localStorage.getItem("marksPlaces")) || []
 
-}
+// }
 
 
 export const Place = () => {
 
-  const [marks, dispatchPlaces] = useReducer(placesMarksReducer, initialState,init);
+    const { placeMarks, isMarked } = useSelector((state) => state.placeMarks);
+    const dispatch = useDispatch();
+
+  // const [marks, dispatchPlaces] = useReducer(placesMarksReducer, initialState,init);
   const { pathname } = useLocation()
 
   const { id } = useParams();
@@ -47,8 +56,8 @@ export const Place = () => {
   let [favorites, setFavorites] = useState(0)
 
   useEffect(() => {
-    localStorage.setItem("marksPlaces", JSON.stringify(marks));
-  }, [marks]);
+    localStorage.setItem("marksPlaces", JSON.stringify(placeMarks));
+  }, [placeMarks]);
 
   const unfavourite = async () => {
 
@@ -188,6 +197,7 @@ export const Place = () => {
   useEffect(() => {
     getPlaces();
     test_favourite();
+    dispatch(ismarked(id));
   }, []);
 
   const position = [43.92853, 2.14255];
@@ -219,23 +229,27 @@ export const Place = () => {
   };
 
 
-  const markPlace = (place) => {
+  const markPlace = (event) => {
+    event.preventDefault();
     console.log("Afegeixo");
-    console.log({ place });
+    // console.log({ place });
+    if(place.description.lenght <= 1) return;
 
-    const mark = {
-        id: new Date().getTime(),
+    const placeMark = {
+        id: place.id,
         name: place.name,
         description: place.description,
         ruta: pathname
     };
 
-    const action = {
-        type: "Add Mark",
-        payload: mark
-    };
-    console.log(mark)
-    dispatchPlaces(action);
+    // const action = {
+    //     type: "Add Mark",
+    //     payload: mark
+    // };
+
+   
+    console.log(placeMark)
+    dispatch(addplacemark(placeMark))
 
     alert('HAS GUARDADO EL PLACE EN MARKS')
 };
@@ -294,7 +308,7 @@ export const Place = () => {
   </Marker>
 </MapContainer> */}
 
-                <button type="submit" onClick={() => markPlace(place)}>DESAR</button>
+                {/* <button type="submit" onClick={() => markPlace(place)}>DESAR</button> */}
                 {place.author.email === usuari ? (
                   <>
                     <Link
@@ -316,6 +330,26 @@ export const Place = () => {
                 ) : (
                   <></>
                 )}
+                {isMarked ? (
+                  <a
+                    href="#"
+                    
+                    className="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
+                  >
+                    DESAT
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    onClick={(e) => markPlace(e)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
+                  >
+                    DESAR
+                  </a>
+                )}
+
+
+
                 {favorited ? (
                   <a
                     href="#"

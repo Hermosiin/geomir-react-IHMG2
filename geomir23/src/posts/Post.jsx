@@ -14,18 +14,26 @@ import { PostsMenu } from "./PostsMenu";
 import { CommentAdd } from "./comments/CommentAdd";
 import { CommentsList } from "./comments/CommentsList";
 import postsMarksReducer from './postsMarksReducer';
+
+import { useDispatch, useSelector } from "react-redux";
+import { ismarked } from "../slices/postMarkSlice";
+import { addpostmark } from "../slices/postMarkSlice";
+
 // import { MarkerLayer, Marker } from "react-leaflet-marker";
 
-const initialState = [];
+// const initialState = [];
 
-const init = ()=> {
+// const init = ()=> {
 
-    return JSON.parse(localStorage.getItem("marksPost")) || []
+//     return JSON.parse(localStorage.getItem("marksPost")) || []
 
-}
+// }
 
 export const Post = () => {
-  const [marks, dispatchPosts] = useReducer(postsMarksReducer, initialState,init);
+
+  const { postMarks, isMarked } = useSelector((state) => state.postMarks);
+    const dispatch = useDispatch();
+  // const [marks, dispatchPosts] = useReducer(postsMarksReducer, initialState,init);
   const { pathname } = useLocation()
 
   const { id } = useParams();
@@ -45,8 +53,8 @@ export const Post = () => {
   let [likes, setLikes] = useState(0);
 
   useEffect(() => {
-    localStorage.setItem("marksPost", JSON.stringify(marks));
-  }, [marks]);
+    localStorage.setItem("marksPosts", JSON.stringify(postMarks));
+  }, [postMarks]);
 
   const unlike = async () => {
     setLiked(false);
@@ -179,6 +187,7 @@ export const Post = () => {
   useEffect(() => {
     getPost();
     test_like();
+    dispatch(ismarked(id));
   }, []);
 
   const position = [43.92853, 2.14255];
@@ -209,22 +218,25 @@ export const Post = () => {
     }
   };
 
-  const markPost = (post) => {
+  const markPost = (event) => {
+    event.preventDefault();
     console.log("Afegeixo");
-    console.log({ post });
+    // console.log({ post });
 
-    const mark = {
-        id: new Date().getTime(),
+    if(post.body.lenght <= 1) return;
+
+    const postMark = {
+        id: post.id,
         body: post.body,
         ruta: pathname
     };
 
-    const action = {
-        type: "Add Mark",
-        payload: mark
-    };
-    console.log(mark)
-    dispatchPosts(action);
+    // const action = {
+    //     type: "Add Mark",
+    //     payload: mark
+    // };
+    console.log(postMark)
+    dispatch(addpostmark(postMark))
 
     alert('HAS GUARDADO EL POST EN MARKS')
     
@@ -283,7 +295,8 @@ export const Post = () => {
     </Popup>
   </Marker>
 </MapContainer> */}
-                <button type="submit" onClick={() => markPost(post)}>DESAR</button>
+
+                {/* <button type="submit" onClick={() => markPost(post)}>DESAR</button> */}
                 {post.author.email === usuari ? (
                   <>
                     <Link
@@ -305,6 +318,26 @@ export const Post = () => {
                 ) : (
                   <></>
                 )}
+
+                {isMarked ? (
+                  <a
+                    href="#"
+                    
+                    className="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
+                  >
+                    DESAT
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    onClick={(e) => markPost(e)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
+                  >
+                    DESAR
+                  </a>
+                )}
+
+
                 {liked ? (
                   <a
                     href="#"

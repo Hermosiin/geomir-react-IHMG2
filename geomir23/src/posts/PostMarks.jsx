@@ -1,39 +1,44 @@
 import React, { useEffect, useReducer } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import PostMark from './PostMark';
-import postsMarksReducer from './postsMarksReducer';
+// import postsMarksReducer from './postsMarksReducer';
 
-const initialState = [];
 
-const init = ()=> {
+// const initialState = [];
 
-    return JSON.parse(localStorage.getItem("marksPost")) || []
-}
+// const init = ()=> {
+
+//     return JSON.parse(localStorage.getItem("marksPost")) || []
+// }
 
 const PostMarks = () => {
 
-    const [marks, dispatchPosts] = useReducer(postsMarksReducer, initialState,init);
+    // const [marks, dispatchPosts] = useReducer(postsMarksReducer, initialState,init);
+
+    const { postMarks } = useSelector((state) => state.postMarks);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        localStorage.setItem("marks", JSON.stringify(marks));
-      }, [marks]);
+        localStorage.setItem("marksPosts", JSON.stringify(postMarks));
+      }, [postMarks]);
 
-    const handleDeleteMark = (id) => {
-        console.log("AQui arribo " + id);
-        dispatchPosts({
-            type: "Del Mark",
-            payload: id
-        });
-        console.log("Mark Eliminado")
-    };
+    // const handleDeleteMark = (id) => {
+    //     console.log("AQui arribo " + id);
+    //     dispatchPosts({
+    //         type: "Del Mark",
+    //         payload: id
+    //     });
+    //     console.log("Mark Eliminado")
+    // };
 
     return (
         <>
-        {marks.map((mark) => (
+        {postMarks.map((postMark) => (
             <>
             <th>Body</th>
             <th colSpan={2}>Actions</th>
             <tr>
-                <PostMark key={mark.id} mark={mark} handleDeleteMark={handleDeleteMark}/>
+                <PostMark key={postMark.id} postMarks={postMark}/>
             </tr>
             </>
         ))}
