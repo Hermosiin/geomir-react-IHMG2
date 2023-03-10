@@ -1,9 +1,12 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import { delplacemark } from '../slices/placeMarkSlice';
 
 const PlaceMark = ({placeMark}) => {
     console.log(placeMark)
+    const dispatch = useDispatch();
+
     return (
         <>
             <td>{placeMark.name}</td>

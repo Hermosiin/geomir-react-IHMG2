@@ -45,7 +45,7 @@ const PlaceMarks = () => {
             <th>Description</th>
             <th colSpan={2}>Actions</th>
             <tr>
-                <PlaceMark key={placeMark.id} placeMarks={placeMark} />
+                <PlaceMark key={placeMark.id} placeMark={placeMark} />
             </tr>
             </>
         ))}

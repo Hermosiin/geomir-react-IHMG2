@@ -38,7 +38,7 @@ const PostMarks = () => {
             <th>Body</th>
             <th colSpan={2}>Actions</th>
             <tr>
-                <PostMark key={postMark.id} postMarks={postMark}/>
+                <PostMark key={postMark.id} postMark={postMark}/>
             </tr>
             </>
         ))}
