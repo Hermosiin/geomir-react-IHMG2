@@ -21,16 +21,18 @@ const initialState = {
 
       state.reviews= action.payload
       state.isLoading=false
-     
       },
+
       setAdd: (state,action) => 
       {
         state.add = action.payload
       },
+
       setError: (state,action) => {
 
         state.error = action.payload
       },
+      
       setReviewsCount: (state,action) => {
         state.reviewsCount = action.payload
       }

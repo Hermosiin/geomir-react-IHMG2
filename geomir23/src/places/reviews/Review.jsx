@@ -1,21 +1,21 @@
 import React from "react";
 import { useContext } from "react";
-import { UserContext } from "../../userContext";
+import { UserContext } from "../../usercontext";
 import { ReviewsContext } from "./reviewsContext";
 
 import TimeAgo from "react-timeago";
 import catStrings from "react-timeago/lib/language-strings/ca";
 import buildFormatter from "react-timeago/lib/formatters/buildFormatter";
+import { addReview, delReview } from "../../slices/reviews/thunks";
 import { useDispatch, useSelector } from "react-redux";
 
-import { delReview } from "./slices/thunks";
-
 export const Review = ({ review }) => {
- const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
  const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
  const dispatch = useDispatch();
-
   const formatter = buildFormatter(catStrings);
+
+  console.log(review)
 
   
 
@@ -24,9 +24,9 @@ export const Review = ({ review }) => {
       <div class="bg-white max-w-xl rounded-2xl px-10 py-8  hover:shadow-2xl transition duration-500">
         <div class="mt-4">
           <h1 class="text-lg text-gray-700 font-semibold hover:underline cursor-pointer">
-            Review de {review.user.name}
+            Resenya de {review.user.name}
           </h1>
-        
+          
           <p class="mt-4 text-md text-gray-600">{review.review}</p>
           <div class="flex justify-between items-center">
             <div class="mt-4 flex items-center space-x-4 py-6">
@@ -39,10 +39,10 @@ export const Review = ({ review }) => {
                 </span>
               </div>
             </div>
-            {review.user.email === email ? (
+            {review.user.email === usuari ? (
               <>
                 <button
-                  onClick={(e) => dispatch( delReview(review,authToken))}
+                  onClick={(e) => dispatch( delReview(review,authToken)) }
                   type="button"
                   class="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded-full hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
                 >

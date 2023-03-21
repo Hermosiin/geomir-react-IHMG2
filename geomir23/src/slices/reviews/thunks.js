@@ -21,6 +21,7 @@ export const getReviews = (page = 0, id, authToken, usuari="") => {
         if (resposta.success == true) 
         {
             dispatch(setReviews(resposta.data));
+            dispatch(setReviewsCount(resposta.data.length))
         }
         else {
             dispatch (setError(resposta.message));
@@ -38,8 +39,6 @@ export const getReviews = (page = 0, id, authToken, usuari="") => {
 
 export const delReview = (review, authToken) => {
     return async (dispatch, getState) => {
-
-
         const data = await fetch(
             "https://backend.insjoaquimmir.cat/api/places/" +
               review.place.id +
@@ -62,42 +61,43 @@ export const delReview = (review, authToken) => {
             // usuari no l'indiquem i per defecta estarà a ""
             dispatch (getReviews(0,review.place.id,authToken))
             const state = getState()
-            dispatch (setReviewsCount(state.reviewsCount - 1));
+            dispatch (setReviewsCount(state.reviews_count - 1));
           }
-
-
     };
 };
 
-export const addReview = (review, authToken) => {
+export const addReview =  ( place_id, review, authToken) => {
+    console.log(review)
     return async (dispatch, getState) => {
-
-
-        const data = await fetch(
-            "https://backend.insjoaquimmir.cat/api/places/" +
-              review.place.id +
-              "/reviews/" +
-              review.id,
-              {
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                  Authorization: "Bearer " + authToken,
-                },
-                method: "POST",
-              }
-          );
-          const resposta = await data.json();
+    const data = await fetch(
+      "https://backend.insjoaquimmir.cat/api/places/"+place_id+"/reviews",
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          //'Content-type': 'multipart/form-data',
+          Authorization: "Bearer " + authToken,
+        },
+        method: "POST",
+        // body: JSON.stringify({ name,description,upload,latitude,longitude,visibility })
+        body: JSON.stringify({ review }),
+      }
+    );
+    const resposta = await data.json();
+    console.log(resposta);
     
-          console.log(resposta);
-          if (resposta.success == true) {
-            dispatch (setAdd(false));
-            // usuari no l'indiquem i per defecta estarà a ""
-            dispatch (getReviews(0,review.place.id,authToken))
-            const state = getState()
-            dispatch (setReviewsCount(state.reviewsCount + 1));
-          }
+    if (resposta.success == true) {
+        dispatch (setAdd(false));
+        console.log("Todo bien"); 
+        dispatch(setReviews(review))
+        dispatch (getReviews(0,place_id,authToken))
+        const state = getState()
+        dispatch (setReviewsCount(state.reviewsCount + 1));
+  
 
 
-    };
-};
+    } else {
+        setError(resposta.message)
+    }
+  };
+}
