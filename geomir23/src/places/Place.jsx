@@ -5,254 +5,43 @@ import { useContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UserContext } from "../usercontext";
 import "leaflet/dist/leaflet.css";
-
 import "../App.css";
-import { Icon } from "leaflet";
-
-import { Marker, Popup, MapContainer, TileLayer, useMap } from "react-leaflet";
-import { PlacesMenu } from "./PlacesMenu";
-import { ReviewAdd } from "./reviews/ReviewAdd";
 import { ReviewsList } from "./reviews/ReviewsList";
-import placesMarksReducer from './placesMarksReducer';
-
 import { addplacemark } from "../slices/placeMarkSlice";
 import { ismarked } from "../slices/placeMarkSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-// import { MarkerLayer, Marker } from "react-leaflet-marker";
-
-//reducer
-// const initialState = [];
-
-// const init = ()=> {
-
-//     return JSON.parse(localStorage.getItem("marksPlaces")) || []
-
-// }
-
+import { getPlace, favourite, unfavourite, delPlace, editPlace } from "../slices/places/thunks";
 
 export const Place = () => {
 
-    const { placeMarks, isMarked } = useSelector((state) => state.placeMarks);
-    const dispatch = useDispatch();
-
-  // const [marks, dispatchPlaces] = useReducer(placesMarksReducer, initialState,init);
-  const { pathname } = useLocation()
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { place, page=0, error="", isLoading=true, favorites, favorited } = useSelector((state) => state.places);
+  const dispatch = useDispatch();
 
   const { id } = useParams();
-
-  let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-
-  let [place, setPlace] = useState({});
-
-  // place és un objecte, amb ojctes interns (place.file.filepath, per exemple)
-  // Quan llegim amb fetch aquest triga un estona en obtenir les dades
-  // i al renderitzar amb aquest objecte buit, dona error
-  // i l 'aplicació peta i ja no es torna a renderitzar quan places
-  // té el valor correcte
-  // Emprem isLoading, per rendertizar només quan ja s'ha carregat el place
-  let [isLoading, setIsLoading] = useState(true);
-  let [favorited, setFavorited] = useState(false);
-  let [favorites, setFavorites] = useState(0)
-
-  useEffect(() => {
-    localStorage.setItem("marksPlaces", JSON.stringify(placeMarks));
-  }, [placeMarks]);
-
-  const unfavourite = async () => {
-
-    setFavorited(false);
-    console.log("Not Favorited");
-    const data = await fetch(
-      "https://backend.insjoaquimmir.cat/api/places/" + id + "/favorites",
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + authToken,
-        },
-        method: "DELETE",
-      }
-    );
-    const resposta = await data.json();
-    if (resposta.success == true) {
-      setFavorited(false);
-      setFavorites(favorites-1)
-      
-    }
-  
-
-  }
-  const favourite = async () => {
-    try {
-      const data = await fetch(
-        "https://backend.insjoaquimmir.cat/api/places/" + id + "/favorites",
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + authToken,
-          },
-          method: "POST",
-        }
-      );
-      const resposta = await data.json();
-
-      if (resposta.success == true) {
-        setFavorited(true);
-        setFavorites(favorites+1)
-        
-      } else {
-        setFavorited(false);
-        console.log("Epp, algo ha passat ");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-
-
-  };
-  const test_favourite = async () => {
-    try {
-      const data = await fetch(
-        "https://backend.insjoaquimmir.cat/api/places/" + id + "/favorites",
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + authToken,
-          },
-          method: "POST",
-        }
-      );
-      const resposta = await data.json();
-
-      console.log(resposta);
-      if (resposta.success == true) {
-        setFavorited(false);
-        console.log("Not Favorited");
-        const data = await fetch(
-          "https://backend.insjoaquimmir.cat/api/places/" + id + "/favorites",
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + authToken,
-            },
-            method: "DELETE",
-          }
-        );
-        const resposta = await data.json();
-      } else {
-        setFavorited(true);
-        console.log("Favorited");
-      }
-    } catch (e) {
-      console.log("oeoeoeoe");
-      console.log(e);
-    }
-  };
-  const getPlaces = async () => {
-    try {
-      const data = await fetch(
-        "https://backend.insjoaquimmir.cat/api/places/" + id,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + authToken,
-          },
-          method: "GET",
-        }
-      );
-      const resposta = await data.json();
-
-      // Faria falta control·lar possible error
-
-      console.log(resposta.data);
-      // En aquest punt omplim l'array,  resposta. data
-      // no és un array, és un objecte retornat per l'api
-      // per tant, hem de crear un array, d'un sol element
-      // per a que el .map del jsx pugui iterar l'únic
-      // element
-      setPlace(resposta.data);
-      setFavorites (resposta.data.favorites_count)
-      console.log(resposta.data.favorites_count)
-      console.log(place);
-      // Ara podem dir que ja s'ha carregat place i es pot renderitzar
-      setIsLoading(false);
-
-      // Actualitzem la vble d'estat places
-      //setPlaces(resposta.data);
-      // Canvia el valor de refresca
-      // provocarà que entri a useEffect
-      // al fer el rendertizat
-      //setRefresca(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  // Sempre necessari, o al actualitzar l'state torna a executar-ho i entra
-  // en bucle
-  useEffect(() => {
-    getPlaces();
-    test_favourite();
-    dispatch(ismarked(id));
-  }, []);
-
-  const position = [43.92853, 2.14255];
-
-  const deletePlace = (id, e) => {
-    e.preventDefault();
-
-    let confirma = confirm("Estas  segur?");
-
-    if (confirma) {
-      fetch("https://backend.insjoaquimmir.cat/api/places/" + id, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + authToken,
-        },
-        method: "DELETE",
-      })
-        .then((data) => data.json())
-        .then((resposta) => {
-          console.log(resposta);
-          if (resposta.success == true) {
-            console.log("OK");
-            // provoca el refrescat del component i la reexecució de useEffect
-            setRefresca(true);
-          }
-        });
-    }
-  };
-
+  const { pathname } = useLocation();
+  const { placeMarks, isMarked } = useSelector((state) => state.placeMarks);
 
   const markPlace = (event) => {
     event.preventDefault();
-    console.log("Afegeixo");
-    // console.log({ place });
     if(place.description.lenght <= 1) return;
 
     const placeMark = {
-        id: place.id,
-        name: place.name,
-        description: place.description,
-        ruta: pathname
+      id: place.id,
+      name: place.name,
+      description: place.description,
+      ruta: pathname
     };
 
-    // const action = {
-    //     type: "Add Mark",
-    //     payload: mark
-    // };
-
-   
     console.log(placeMark)
-    dispatch(addplacemark(placeMark))
+    dispatch(addplacemark(placeMark))  
+  };
 
-    alert('HAS GUARDADO EL PLACE EN MARKS')
-};
+  useEffect(() => {
+    dispatch(getPlace(id, authToken));
+    dispatch(ismarked(id));
+  }, []);
 
   return (
     <>
@@ -321,7 +110,7 @@ export const Place = () => {
                     <a
                       href="#"
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
-                      onClick={(e) => deletePlace(id, e)}
+                      onClick={(e) => dispatch( delPlace(place, authToken)) }
                     >
                       {" "}
                       Esborrar
@@ -353,7 +142,7 @@ export const Place = () => {
                 {favorited ? (
                   <a
                     href="#"
-                    onClick={(e) => unfavourite(id, e)}
+                    onClick={(e) => dispatch(unfavourite(id, authToken, favorites))}
                     className="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
                   >
                     - ❤️ {favorites}
@@ -361,7 +150,7 @@ export const Place = () => {
                 ) : (
                   <a
                     href="#"
-                    onClick={(e) => favourite(id, e)}
+                    onClick={(e) => dispatch(favourite(id, authToken, favorites))}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 h-10 md:h-10 uppercase"
                   >
                     + ❤️ {favorites}

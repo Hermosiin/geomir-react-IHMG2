@@ -2,51 +2,17 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react';
 import { UserContext } from '../usercontext';
+import { delPlace } from '../slices/places/thunks';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const PlaceGrid = ({v, setRefresca} ) => {
+export const PlaceGrid = ({v} ) => {
 
-  let { usuari, setUsuari,authToken,setAuthToken } = useContext(UserContext)
-
-  console.log(v)
-
-
-  const deletePlace = (id,e) => {
-
-    e.preventDefault();
-  
-    let confirma = confirm("Estas  segur?")
-  
-    if (confirma)
-    {
-      fetch ("https://backend.insjoaquimmir.cat/api/places/"+id,{
-      
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + authToken
-          },
-          method: "DELETE",
-         
-      }
-      ).then( data => data.json() )
-      .then (resposta => { 
-          
-              console.log(resposta); 
-              if (resposta.success == true )
-              {
-                  console.log("ok")
-                  // provoca el refrescat del component i la reexecució de useEffect
-                  setRefresca(true);
-                  
-              }
-          } ) 
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { places = [], page=0, isLoading=true, error="", favorites } = useSelector((state) => state.places);
+  const dispatch = useDispatch();
   
   
   
-    }
-  
-  
-  }
   return (
     <div key={v.id } className="p-1 rounded-xl group sm:flex space-x-6 bg-white bg-opacity-50 shadow-xl hover:rounded-2xl">
           <img src={ "https://backend.insjoaquimmir.cat/storage/" + v.file.filepath } alt="art cover" loading="lazy" width="1000" height="667" className="h-56 sm:h-full w-full sm:w-5/12 object-cover object-top rounded-lg transition duration-500 group-hover:rounded-xl"/>
@@ -64,7 +30,7 @@ export const PlaceGrid = ({v, setRefresca} ) => {
               { v.author.email === usuari ? 
               (   <>
                   <Link to={"/places/edit/"+v.id} className="w-max text-cyan-600"> Editar </Link>
-                  <a href="#" className=" w-max text-cyan-600" onClick={ (e)=> deletePlace(v.id,e) }> Esborrar</a>
+                  <a href="#" className=" w-max text-cyan-600" onClick={(e) => dispatch( delPlace(v, authToken)) }> Esborrar</a>
                    </> 
               ) : ( <></> )}
             </div>

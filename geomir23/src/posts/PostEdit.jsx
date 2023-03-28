@@ -6,150 +6,52 @@ import { Navigate, useParams } from 'react-router-dom';
 import { UserContext } from '../usercontext';
 import { useNavigate } from 'react-router';
 
-
+import { getPost, editPost } from '../slices/posts/thunks';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const PostEdit = () => {
 
-    const { id } = useParams();
-    let navigate = useNavigate();
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { post, page=0, error="", isLoading=true } = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
 
-    const [error,setError] = useState("")
-    const [ avis, setAvis] = useState("");
+  const { id } = useParams();
+  let navigate = useNavigate();
 
-   
-    let { authToken } = useContext(UserContext)
-    let [ formulari,setFormulari] = useState({});
+  const [avis, setAvis] = useState("");
+ 
+  let [ formulari, setFormulari] = useState({});
 
-
-    //const { id } = useParams();
-    console.log(id)
-          
-
-    const getPost = async () => {
-      try {
-      
-
-        console.log("Inicio lectura");
-        const data = await fetch ("https://backend.insjoaquimmir.cat/api/posts/"+id,{
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '  + authToken 
-                  },
-                  method: "GET",
-       })
-
-        const resposta = await data.json();
-
-        console.log(resposta.data)
-        
-        setFormulari({
-              body: resposta.data.body,
-              upload:"",
-              latitude: resposta.data.latitude,
-              longitude: resposta.data.longitude,
-              visibility: resposta.data.visibility.id
-
-        })
-
-      }
-      catch (e) {
-
-          console.log("S'ha produit algun error");
-      }   
-             
-     
-
-    }
-
-    const handleChange = (e)=> {
-
-      e.preventDefault();
-
-      setError("");
-      if (e.target.type && e.target.type==="file")
-      {
-        console.log(e.target.files[0].name)
-        setFormulari({
-
-          ...formulari,
-          [e.target.name] : e.target.files[0] 
-  
-        })
-
-      }
-      else {
-      // Canviem l'element de l'objecte de l'estat
+  const handleChange = (e)=> {
+    e.preventDefault();
+    if (e.target.type && e.target.type==="file")
+    {
+      console.log(e.target.files[0].name)
       setFormulari({
-
         ...formulari,
-        [e.target.name] : e.target.value
-
+        [e.target.name] : e.target.files[0] 
       })
-    }
-
+    } else {
+    // Canviem l'element de l'objecte de l'estat
+    setFormulari({
+      ...formulari,
+      [e.target.name] : e.target.value
+    })
   }
-  
-    useEffect(() => {
-     
-    
-              getPost();      
-   
-         }, []) 
+}
 
-  
-    const editar = (e) => {
+  useEffect(() => {
+    dispatch(getPost(id, authToken));      
+  }, []) 
 
-        e.preventDefault();
-    
-        let {body,upload,latitude,longitude,visibility}=formulari;
-        const formData = new FormData();
-        formData.append("body", body);
-        formData.append("upload", upload);
-        formData.append("latitude", latitude);
-        formData.append("longitude", longitude);
-        formData.append("visibility", visibility);
-    
-    
-    
-        console.log("Editant un Post....")
-        console.log(formulari)
-        console.log(JSON.stringify({ body,upload,latitude,longitude,visibility }))
-        // Enviam dades a l'aPI i recollim resultat
-        fetch ("https://backend.insjoaquimmir.cat/api/posts/"+id,{
-            headers: {
-                'Accept': 'application/json',
-                //'Content-type': 'multipart/form-data',
-                'Authorization': 'Bearer ' + authToken 
-            },
-            method: "POST",
-            // body: JSON.stringify({ name,description,upload,latitude,longitude,visibility })
-            body: formData
-    
-          }
-        ).then( data => data.json() )
-        .then (resposta => { 
-            
-                console.log(resposta); 
-                if (resposta.success == true )
-                {
-                    
-                    console.log(authToken)
-                    setAvis("Post modificat correctament")
-                    //setAfegir(false); // Tornem al llistat
-                    navigate("/posts/")
-                }
-                else
-                {
-                      setError(resposta.message)
-
-                }
-            } ) 
-    
-    
-      }
-
-
+  useEffect(() => {
+    setFormulari({
+      body: post.body,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      visibility: post.visibility,
+    })
+  }, [post]) 
   return (
    
     <>
@@ -235,7 +137,8 @@ export const PostEdit = () => {
 <div className="py-9">
 { avis ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-green-50 px-4 ring-2 ring-green-200 ">{avis}</div>) : (<></>)  }
 { error ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-red-50 mb-4 px-4 ring-2 ring-red-200 ">{error}</div>) : (<></>)  }
-<button onClick={editar}  type="submit" className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+<button onClick={(e) => dispatch( editPost(formulari, authToken, post)) }
+  type="submit" className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
     Editar Entrada
     </button>
     <button onClick={ ()=> {navigate(-1)}}  type="submit" className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">

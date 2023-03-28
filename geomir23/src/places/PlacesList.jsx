@@ -7,51 +7,17 @@ import { useEffect } from "react";
 import { PlaceList } from "./PlaceList";
 import { useFetch } from "../hooks/useFetch";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getPlaces } from "../slices/places/thunks";
+
 export const PlacesList = () => {
-  // desa el retorn de dades de l'api places
-  //let [places, setPlaces] = useState([]);
-  // Ho utilitzem per provar un refresc quan esborrem un element
-  let [refresh, setRefresh] = useState(false);
-  // Dades del context. Ens cal el token per poder fer les crides a l'api
-  let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { places = [], page=0, isLoading=true, error="" } = useSelector((state) => state.places);
+  const dispatch = useDispatch();
 
-  // només quan la vble d'estat refresca canvia el seu valor
-  // refresca canviarà el valor quan fem alguna operació com delete
-  // Crida a l'api. mètode GET
-  const { data, error, loading} = useFetch("https://backend.insjoaquimmir.cat/api/places", {
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + authToken,
-    },
-    method: "GET",
-  })
- 
-   // condició d'execució del useffect
-
-  // Esborrar un element
-  const deletePlace = (id, e) => {
-
-    let confirma = confirm("Estas  segur?");
-
-    if (confirma) {
-      fetch("https://backend.insjoaquimmir.cat/api/places/" + id, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + authToken,
-        },
-        method: "DELETE",
-      })
-        .then((data) => data.json())
-        .then((resposta) => {
-          if (resposta.success == true) {
-            // provoca el refrescat del component i la reexecució de useEffect
-            setRefresh(!refresh);
-          }
-        });
-    }
-  };
+  useEffect(() => {
+    dispatch(getPlaces(0, authToken, email));
+  }, []);
 
   return (
     <>
@@ -134,11 +100,11 @@ export const PlacesList = () => {
                   </tr>
                 </thead>
                 <tbody> 
-                  {loading ? "Espera..." : <>{data.map((v) => {
+                  {isLoading ? "Espera..." : <>{places.map((v) => {
                     return (
             
                       <>
-                      { v.visibility.id == 1 || v.author.email == usuari ? (<PlaceList  deletePlace={ deletePlace } key={v.id} v={v}/>) : <></> }
+                      { v.visibility.id == 1 || v.author.email == usuari ? (<PlaceList key={v.id} v={v}/>) : <></> }
                   
                       </>
                       )

@@ -5,163 +5,73 @@ import { UserContext } from '../usercontext';
 import 'leaflet/dist/leaflet.css';
 
 import "../App.css"
-import { Icon } from "leaflet";
-
-
 
 import { Marker, Popup, useMapEvents ,MapContainer, TileLayer, useMap } from 'react-leaflet'
-import { PlacesMenu } from './PlacesMenu';
+
 import { useEffect } from 'react';
 
-export const PlacesAdd = ({ setAfegir }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { addPlace } from "../slices/places/thunks";
+
+export const PlacesAdd = () => {
 
   
-  let { authToken } = useContext(UserContext)
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { places = [], page=0, error="", isLoading=true } = useSelector((state) => state.places);
+  const dispatch = useDispatch();
 
-  const [position, setPosition] = useState(null)
-  let [ formulari,setFormulari] = useState({});
-  const [ avis, setAvis] = useState("");
-  const [error, setError] = useState("")
+  const [position, setPosition] = useState(null);
+  const [formulari, setFormulari] = useState({});
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setFormulari({
+        ...formulari,
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude,
+      });
 
-  
-
-  
- useEffect( ()=> {
-    
-  navigator.geolocation.getCurrentPosition( (pos )=> {
-
-    setFormulari({
-
-      ...formulari,
-      latitude :  pos.coords.latitude,
-      longitude: pos.coords.longitude
-  
-    })
-    
-    console.log("Latitude is :", pos.coords.latitude);
-    console.log("Longitude is :", pos.coords.longitude);
-  });
-
-
- },[])
-
-
+      console.log("Latitude is :", pos.coords.latitude);
+      console.log("Longitude is :", pos.coords.longitude);
+    });
+  }, []);
 
   function LocationMarker() {
-    
     const map = useMapEvents({
       click() {
-        map.locate()
+        map.locate();
       },
       locationfound(e) {
-        setPosition(e.latlng)
+        setPosition(e.latlng);
         console.log(e.latlng);
-        map.flyTo(e.latlng, map.getZoom())
+        map.flyTo(e.latlng, map.getZoom());
       },
-    })
-  
+    });
+
     return position === null ? null : (
       <Marker position={position}>
         <Popup>You are here</Popup>
       </Marker>
-    )
+    );
   }
 
+  const handleChange = (e) => {
+    e.preventDefault();
 
-
-  const handleChange = (e)=> {
-
-      e.preventDefault();
-
-      // Esborrem qualsevol possible avís o error
-      setError("");
-      setAvis("");
-
-
-      if (e.target.type && e.target.type==="file")
-      {
-        console.log(e.target.files[0].name)
-        setFormulari({
-
-          ...formulari,
-          [e.target.name] : e.target.files[0] 
-  
-        })
-
-      }
-      else {
+    if (e.target.type && e.target.type==="file") {
+      console.log(e.target.files[0].name);
+      setFormulari({
+        ...formulari,
+        [e.target.name]: e.target.files[0],
+      });
+    } else {
       // Canviem l'element de l'objecte de l'estat
       setFormulari({
-
         ...formulari,
-        [e.target.name] : e.target.value
-
-      })
+        [e.target.name]: e.target.value,
+      });
     }
-
-  }
-  const afegir = (e) => {
-
-    e.preventDefault();
-
-    let {name,description,upload,latitude,longitude,visibility}=formulari;
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("upload", upload);
-    formData.append("latitude", latitude);
-    formData.append("longitude", longitude);
-    formData.append("visibility", visibility);
-
-
-
-    console.log("Afegint un Lloc....")
-    console.log(formulari)
-    console.log(JSON.stringify({ name,description,upload,latitude,longitude,visibility }))
-    // Enviam dades a l'aPI i recollim resultat
-    fetch ("https://backend.insjoaquimmir.cat/api/places",{
-        headers: {
-            'Accept': 'application/json',
-            //'Content-type': 'multipart/form-data',
-            'Authorization': 'Bearer ' + authToken 
-        },
-        method: "POST",
-        // body: JSON.stringify({ name,description,upload,latitude,longitude,visibility })
-        body: formData
-
-      }
-    ).then( data => data.json() )
-    .then (resposta => { 
-        
-            console.log(resposta); 
-            if (resposta.success == true )
-            {
-                
-                console.log(authToken)
-                //setAfegir(false); // Tornem al llistat
-                setAvis("Place introduit correctament")
-
-
-            }
-            else
-            {
-
-              console.log("S\'ha produit un error")
-              setError(resposta.message)
-
-            }
-        } ) 
-
-
-  }
-
-  const tornar = (e) => {
-
-    e.preventDefault();
-    setAfegir(false);
-
-  }
+  };
 
 
   return (
@@ -254,11 +164,13 @@ export const PlacesAdd = ({ setAfegir }) => {
   
 </select>
 <div className="py-9">
-<button onClick={afegir}  type="submit" className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+<button onClick={(e) => { e.preventDefault();  dispatch( addPlace(formulari, authToken))} }
+  type="submit" className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
     Afegir Entrada
     </button>
     { error ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-red-50 px-4 ring-2 ring-red-200 ">{error}</div>) : (<></>)  }
-    { avis ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-green-50 px-4 ring-2 ring-green-200 ">{avis}</div>) : (<></>)  }
+    {/* { avis ? (<div className="flex w-full items-center space-x-2 rounded-2xl bg-green-50 px-4 ring-2 ring-green-200 ">{avis}</div>) : (<></>)  } */}
+
 
     
   </div>
