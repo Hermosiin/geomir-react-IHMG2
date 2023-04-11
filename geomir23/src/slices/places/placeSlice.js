@@ -11,7 +11,8 @@ const initialState = {
         latitude: 0,
         longitude: 0,
     },
-    page: 0,
+    page: 1,
+    pages: [],
     isLoading: false,
     favorites: 0,
     favorited: false,
@@ -47,8 +48,16 @@ export const placeSlice = createSlice({
         setError: (state,action) => {
             state.error = action.payload
         },
+
+        setPage: (state,action) => {
+            state.page = action.payload
+        },
+
+        setPages: (state,action) => {
+            state.pages = action.payload
+        },
     }
 });
 
-export const { startLoadingPlaces, setPlaces, setPlace, setFavorites, setFavorited, setError } = placeSlice.actions;
+export const { startLoadingPlaces, setPlaces, setPlace, setFavorites, setFavorited, setError, setPage, setPages } = placeSlice.actions;
 export default placeSlice.reducer

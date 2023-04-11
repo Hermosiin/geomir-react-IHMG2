@@ -1,7 +1,42 @@
-import { startLoadingPlaces, setError, setPlaces, setPlace, setFavorites, setFavorited } from "./placeSlice";
+import { startLoadingPlaces, setError, setPlaces, setPlace, setFavorites, setFavorited, setPages } from "./placeSlice";
 import { useNavigate } from "react-router-dom";
 
-export const getPlaces = (page = 0, authToken, usuari="") => {
+export const getPlaces = (authToken,page = 0) => {
+    return async (dispatch, getState) => {
+        dispatch(startLoadingPlaces());
+
+        const headers = {
+
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + authToken,
+            },
+            method: "GET",
+        };
+        let url =  page > 0 ? 
+        "https://backend.insjoaquimmir.cat/api/places?paginate=1&page=" + page 
+        : 
+        "https://backend.insjoaquimmir.cat/api/places" ;
+
+        const data = await fetch(url, headers);
+        const resposta = await data.json();
+
+        if(resposta.success == true) {
+            if (page > 0) {
+                dispatch(setPlaces(resposta.data.collection));
+                dispatch(setPages(resposta.data.links));
+                console.log(resposta.data.links);
+            } else {
+                dispatch(setPlaces(resposta.data));
+            }
+        }else {
+            setError(resposta.message);
+        }
+    }
+}
+
+export const getPlace = (id, authToken) => {
     return async (dispatch, getState) => {
 
         dispatch(startLoadingPlaces());
@@ -14,13 +49,16 @@ export const getPlaces = (page = 0, authToken, usuari="") => {
             },
             method: "GET",
         };
-        const url = "https://backend.insjoaquimmir.cat/api/places"
+        const url = "https://backend.insjoaquimmir.cat/api/places/" + id
 
-        const data = await fetch(url,  headers  );
+        const data = await fetch(url, headers);
         const resposta = await data.json();
 
         if (resposta.success == true) {
-            dispatch(setPlaces(resposta.data));
+            dispatch(setPlace(resposta.data));
+            dispatch(setFavorites(resposta.data.favorites_count));
+            dispatch(testFavourites(id, authToken));
+
         } else {
             dispatch(setError(resposta.message));
         }
@@ -59,35 +97,6 @@ export const addPlace = (formulari, authToken) => {
         setError(resposta.message);
     }
   };
-}
-
-export const getPlace = (id, authToken) => {
-    return async (dispatch, getState) => {
-
-        dispatch(startLoadingPlaces());
-
-        const headers = {
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + authToken,
-            },
-            method: "GET",
-        };
-        const url = "https://backend.insjoaquimmir.cat/api/places/" + id
-
-        const data = await fetch(url,  headers  );
-        const resposta = await data.json();
-
-        if (resposta.success == true) {
-            dispatch(setPlace(resposta.data));
-            dispatch(setFavorites(resposta.data.favorites_count));
-            dispatch(testFavourites(id, authToken));
-
-        } else {
-            dispatch(setError(resposta.message));
-        }
-    };
 }
 
 export const editPlace = (formulari, authToken, place) => {

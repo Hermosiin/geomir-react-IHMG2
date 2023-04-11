@@ -8,14 +8,16 @@ import { getPlaces } from "../slices/places/thunks";
 
 import { PlaceGrid } from "./PlaceGrid";
 
+import { Paginate } from "./Paginate";
+
 export const PlacesGrid = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { places = [], page=0, isLoading=true, error="" } = useSelector((state) => state.places);
+  const { places = [], page, isLoading=true, error="" } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPlaces(0, authToken, email));
-  }, []);
+    dispatch(getPlaces(authToken, page));
+  }, [page]);
   return (
     <>
       <div className="py-16 bg-gradient-to-br from-green-50 to-cyan-100">
@@ -52,6 +54,7 @@ export const PlacesGrid = () => {
           </div>
         </div> */}
           </div>
+          <Paginate/>
         </div>
       </div>
     </>

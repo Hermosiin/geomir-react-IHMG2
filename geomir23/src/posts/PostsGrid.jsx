@@ -8,14 +8,16 @@ import { PostGrid } from "./PostGrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../slices/posts/thunks";
 
+import { Paginate } from "./Paginate";
+
 export const PostsGrid = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { posts = [], page=0, isLoading=true, error="" } = useSelector((state) => state.posts);
+  const { posts = [], page, isLoading=true, error="" } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPosts(0, authToken, email));
-  }, []);
+    dispatch(getPosts(authToken, page));
+  }, [page]);
 
   return (
     <>
@@ -53,6 +55,7 @@ export const PostsGrid = () => {
           </div>
         </div> */}
           </div>
+          <Paginate/>
         </div>
       </div>
     </>

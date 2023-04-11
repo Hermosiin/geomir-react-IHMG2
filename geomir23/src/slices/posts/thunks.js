@@ -1,12 +1,12 @@
-import { startLoadingPosts, setError, setPosts, setPost, setLikes, setLiked } from "./postSlice";
+import { startLoadingPosts, setError, setPosts, setPost, setLikes, setLiked, setPages } from "./postSlice";
 import { useNavigate } from "react-router-dom";
 
-export const getPosts = (page = 0, authToken, usuari="") => {
+export const getPosts = (authToken,page = 0) => {
     return async (dispatch, getState) => {
-
         dispatch(startLoadingPosts());
 
         const headers = {
+
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -14,17 +14,26 @@ export const getPosts = (page = 0, authToken, usuari="") => {
             },
             method: "GET",
         };
-        const url = "https://backend.insjoaquimmir.cat/api/posts"
+        let url =  page > 0 ? 
+        "https://backend.insjoaquimmir.cat/api/posts?paginate=1&page=" + page 
+        : 
+        "https://backend.insjoaquimmir.cat/api/posts" ;
 
-        const data = await fetch(url,  headers  );
+        const data = await fetch(url, headers);
         const resposta = await data.json();
 
-        if (resposta.success == true) {
-            dispatch(setPosts(resposta.data));
-        } else {
-            dispatch(setError(resposta.message));
+        if(resposta.success == true) {
+            if (page > 0) {
+                dispatch(setPosts(resposta.data.collection));
+                dispatch(setPages(resposta.data.links));
+                console.log(resposta.data.links);
+            } else {
+                dispatch(setPosts(resposta.data));
+            }
+        }else {
+            setError(resposta.message);
         }
-    };
+    }
 }
 
 export const addPost = (formulari, authToken) => {
