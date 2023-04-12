@@ -7,11 +7,15 @@ export const Paginate = ({}) => {
 
     return (
         <>
-            { pages.map ( (page)=> (
+            <ul class="flex flex-row">
+            
+                { pages.map ( (page)=> (
 
-                <PaginateLink page={page}/>
+                    <PaginateLink page={page}/>
 
-            ) ) }
+                ) ) }
+
+            </ul>
         </>
     )
 }

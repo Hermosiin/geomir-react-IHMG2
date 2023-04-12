@@ -29,6 +29,9 @@ export const PlacesGrid = () => {
             {/* <h2 className="text-2xl text-cyan-900 font-bold md:text-4xl">Sharing is Caring</h2>
         <p className="lg:w-6/12 lg:mx-auto">Quam hic dolore cumque voluptate rerum beatae et quae, tempore sunt, debitis dolorum officia aliquid explicabo? Excepturi, voluptate?</p> */}
           </div>
+          <div className="block w-max mx-auto px-3 py-1.5">
+            <Paginate/>
+          </div>
 
           <div className="grid gap-12 lg:grid-cols-2">
             {isLoading ? "Espera..." : <>{places.map((v) => {
@@ -54,7 +57,9 @@ export const PlacesGrid = () => {
           </div>
         </div> */}
           </div>
-          <Paginate/>
+          <div className="block w-max mx-auto px-3 py-1.5">
+            <Paginate/>
+          </div>
         </div>
       </div>
     </>
