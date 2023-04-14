@@ -34,7 +34,9 @@ export const useLogin = () => {
         }
     };
 
-    const doLogin = (formState) =>  {
+    const doLogin = async (data) => {
+        let email = data.email;
+        let password = data.password;
     
         console.log("Comprovant credencials....")
         // Enviam dades a l'aPI i recollim resultat
@@ -46,7 +48,8 @@ export const useLogin = () => {
                 //"Access-Control-Allow-Origin": "*"  
             },
             method: "POST",
-            body: JSON.stringify(formState)
+            // body: JSON.stringify(formState)
+            body: JSON.stringify({ email, password })
         }
         ).then( data => data.json() )
         .then (resposta => { 
@@ -74,5 +77,5 @@ export const useLogin = () => {
     useEffect(() => {
         checkAuthToken();
     })
-    return {doLogin};
+    return { doLogin, checkAuthToken };
 }
