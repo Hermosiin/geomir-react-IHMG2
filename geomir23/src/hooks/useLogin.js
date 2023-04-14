@@ -3,7 +3,7 @@ import { useEffect, useContext } from "react";
 
 export const useLogin = () => {
 
-    let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+    let { usuari, setUsuari, authToken, setAuthToken, idUsuari, setIdUsuari } = useContext(UserContext);
 
     const checkAuthToken = () => {
 
@@ -26,6 +26,7 @@ export const useLogin = () => {
                     setAuthToken(token);
                     console.log("Token Correcte: " + token);
                     setUsuari(resposta.user.email);
+                    setIdUsuari(resposta.user.id);
                 }else{
                     setAuthToken("");
                 }

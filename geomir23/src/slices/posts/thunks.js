@@ -1,8 +1,9 @@
-import { startLoadingPosts, setError, setPosts, setPost, setLikes, setLiked, setPages } from "./postSlice";
+import { startLoadingPosts, setError, setPosts, setPost, setLikes, setLiked, setPages, setFilter } from "./postSlice";
 import { useNavigate } from "react-router-dom";
 
 export const getPosts = (authToken,page = 0) => {
     return async (dispatch, getState) => {
+        let filter = getState().posts.filter;
         dispatch(startLoadingPosts());
 
         const headers = {
@@ -18,6 +19,24 @@ export const getPosts = (authToken,page = 0) => {
         "https://backend.insjoaquimmir.cat/api/posts?paginate=1&page=" + page 
         : 
         "https://backend.insjoaquimmir.cat/api/posts" ;
+
+        let primsimbolo = page > 0 ? "&" : "?";
+
+        let body = filter.body != "" ? "body="+filter.body : "";
+        
+        let author = filter.author != "" ? "author="+filter.author : "";
+        
+        if (body != "" && author != ""){
+            url = url+primsimbolo+body+"&"+author;
+        }
+
+        else if (author != ""){
+            url = url+primsimbolo+author;
+        }
+
+        else if (body != "" ){
+            url = url+primsimbolo+body;
+        }
 
         const data = await fetch(url, headers);
         const resposta = await data.json();

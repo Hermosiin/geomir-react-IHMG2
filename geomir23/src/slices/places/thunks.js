@@ -1,8 +1,9 @@
-import { startLoadingPlaces, setError, setPlaces, setPlace, setFavorites, setFavorited, setPages } from "./placeSlice";
+import { startLoadingPlaces, setError, setPlaces, setPlace, setFavorites, setFavorited, setPages, setFilter } from "./placeSlice";
 import { useNavigate } from "react-router-dom";
 
 export const getPlaces = (authToken,page = 0) => {
     return async (dispatch, getState) => {
+        let filter = getState().places.filter;
         dispatch(startLoadingPlaces());
 
         const headers = {
@@ -18,6 +19,24 @@ export const getPlaces = (authToken,page = 0) => {
         "https://backend.insjoaquimmir.cat/api/places?paginate=1&page=" + page 
         : 
         "https://backend.insjoaquimmir.cat/api/places" ;
+
+        let primsimbolo = page > 0 ? "&" : "?";
+
+        let description = filter.description != "" ? "description="+filter.description : "";
+
+        let author = filter.author != "" ? "author="+filter.author : "";
+
+        if (description != "" && author != ""){
+            url = url+primsimbolo+description+"&"+author;
+        }
+
+        else if (author != ""){
+            url = url+primsimbolo+author;
+        }
+
+        else if (description != "" ){
+            url = url+primsimbolo+description;
+        }
 
         const data = await fetch(url, headers);
         const resposta = await data.json();

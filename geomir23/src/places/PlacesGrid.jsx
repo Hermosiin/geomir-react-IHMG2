@@ -12,12 +12,12 @@ import { Paginate } from "./Paginate";
 
 export const PlacesGrid = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { places = [], page, isLoading=true, error="" } = useSelector((state) => state.places);
+  const { places = [], page, isLoading=true, error="", filter } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPlaces(authToken, page));
-  }, [page]);
+  }, [page, filter]);
   return (
     <>
       <div className="py-16 bg-gradient-to-br from-green-50 to-cyan-100">

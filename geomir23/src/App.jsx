@@ -44,13 +44,14 @@ function App() {
 
   let [usuari, setUsuari] = useState("");
   let [ authToken,setAuthToken] = useState("");
+  let [idUsuari, setIdUsuari] = useState("");
 
   
 
   return (
    <>
 
-    <UserContext.Provider value= { { usuari, setUsuari,authToken,setAuthToken }}>
+    <UserContext.Provider value= { { usuari, setUsuari,authToken,setAuthToken, idUsuari, setIdUsuari }}>
       
       { authToken != "" ? (
       

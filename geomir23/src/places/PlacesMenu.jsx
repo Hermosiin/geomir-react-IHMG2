@@ -1,12 +1,24 @@
-import React from 'react'
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const PlacesMenu = () => {
+import { useDispatch, useSelector } from "react-redux";
+import { UserContext } from '../usercontext';
+import { useForm } from '../hooks/useForm';
+import { setFilter } from '../slices/places/placeSlice';
 
+export const PlacesMenu = () => {
 
    const navega = useNavigate()
    const [qui,setQui] = useState(false)
+
+   const dispatch = useDispatch();
+    const { formState, onInputChange, onResetForm } = useForm({
+      search: "",
+    });  
+    let { idUsuari } = useContext(UserContext);
+    const { filter } = useSelector((state) => state.places);
+    const { search } = formState;
 
 
   return (
@@ -38,7 +50,7 @@ export const PlacesMenu = () => {
     <div className="-space-x-2 mx-auto w-max relative ">
       <input
         className="peer bg-yellow-100 h-10 md:h-10 pl-14 text-xl font-semibold text-blue-700 focus:bg-yellow-400 outline-none caret-blue-700"
-        type="text"
+        type="text" placeholder="Search..." name="search" value={search} onChange={onInputChange}
       />
      
       <svg
@@ -53,8 +65,23 @@ export const PlacesMenu = () => {
 
       <button
         className="bg-blue-500 hover:bg-blue-300 text-white font-semibold text-lg h-10 md:h-10 px-10 md:px-12"
+        title={"Buscar"} onClick={(e) => { e.preventDefault(); dispatch(setFilter({...filter,description:search}));}}
       >
-        Go
+        Buscar
+      </button>
+
+      <button
+        className="bg-blue-500 hover:bg-blue-300 text-white font-semibold text-lg h-10 md:h-10 px-10 md:px-12"
+        title={"Mis Places"} onClick={(e) => { e.preventDefault(); dispatch(setFilter({...filter,author:idUsuari}));}}
+      >
+        Mis Places
+      </button>
+
+      <button
+        className="bg-blue-500 hover:bg-blue-300 text-white font-semibold text-lg h-10 md:h-10 px-10 md:px-12"
+        title={"Reiniciar"} onClick={(e) => { e.preventDefault(); dispatch(setFilter({...filter,author:"",description:""})), onResetForm()}}
+      >
+        Reiniciar
       </button>
     </div>
     </div>

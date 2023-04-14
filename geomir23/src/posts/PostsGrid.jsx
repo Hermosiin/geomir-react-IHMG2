@@ -12,12 +12,12 @@ import { Paginate } from "./Paginate";
 
 export const PostsGrid = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { posts = [], page, isLoading=true, error="" } = useSelector((state) => state.posts);
+  const { posts = [], page, isLoading=true, error="", filter } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPosts(authToken, page));
-  }, [page]);
+  }, [page, filter]);
 
   return (
     <>

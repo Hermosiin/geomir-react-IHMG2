@@ -12,12 +12,12 @@ import { getPlaces } from "../slices/places/thunks";
 
 export const PlacesList = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { places = [], page=0, isLoading=true, error="" } = useSelector((state) => state.places);
+  const { places = [], page=0, isLoading=true, error="", filter } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPlaces(0, authToken, email));
-  }, []);
+    dispatch(getPlaces(authToken, email));
+  }, [filter]);
 
   return (
     <>

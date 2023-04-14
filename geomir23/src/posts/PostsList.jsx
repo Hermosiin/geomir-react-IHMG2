@@ -10,12 +10,12 @@ import { getPosts } from "../slices/posts/thunks";
 
 export const PostsList = () => {
   const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { posts = [], page=0, isLoading=true, error="" } = useSelector((state) => state.posts);
+  const { posts = [], page=0, isLoading=true, error="", filter } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPosts(0, authToken, email));
-  }, []);
+    dispatch(getPosts(authToken, email));
+  }, [filter]);
 
   return (
     <>

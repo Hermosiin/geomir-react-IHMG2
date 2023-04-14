@@ -17,6 +17,7 @@ const initialState = {
     favorites: 0,
     favorited: false,
     error: "",
+    filter: { description: "", author: ""}
 }
 
 export const placeSlice = createSlice({
@@ -56,8 +57,12 @@ export const placeSlice = createSlice({
         setPages: (state,action) => {
             state.pages = action.payload
         },
+
+        setFilter: (state,action) => {
+            state.filter = action.payload;
+        },
     }
 });
 
-export const { startLoadingPlaces, setPlaces, setPlace, setFavorites, setFavorited, setError, setPage, setPages } = placeSlice.actions;
+export const { startLoadingPlaces, setPlaces, setPlace, setFavorites, setFavorited, setError, setPage, setPages, setFilter } = placeSlice.actions;
 export default placeSlice.reducer
