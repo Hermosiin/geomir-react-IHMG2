@@ -66,23 +66,24 @@ export const delComment = (comment, authToken) => {
     };
 };
 
-export const addComment =  ( post_id, comment, authToken) => {
-    console.log(comment)
-    return async (dispatch, getState) => {
-    const data = await fetch(
-      "https://backend.insjoaquimmir.cat/api/posts/"+post_id+"/comments",
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          //'Content-type': 'multipart/form-data',
-          Authorization: "Bearer " + authToken,
-        },
-        method: "POST",
-        // body: JSON.stringify({ name,description,upload,latitude,longitude,visibility })
-        body: JSON.stringify({ comment }),
-      }
-    );
+// export const addComment =  ( post_id, comment, authToken) => {
+  export const addComment =  (dataWithId) => {
+    return async (dispatch,getState) => {
+      const {comment,id,authToken} = dataWithId;
+      console.log(dataWithId.comment);
+      console.log(dataWithId.id);
+      const data = await fetch(
+          "https://backend.insjoaquimmir.cat/api/posts/" + id +"/comments",
+          {
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + authToken,
+              },
+              method: "POST",
+              body: JSON.stringify({comment})
+          }
+      );
     const resposta = await data.json();
     console.log(resposta);
     
@@ -90,7 +91,7 @@ export const addComment =  ( post_id, comment, authToken) => {
         dispatch (setAdd(false));
         console.log("Todo bien"); 
         dispatch(setComments(comment))
-        dispatch (getComments(0,post_id,authToken))
+        dispatch (getComments(0,id,authToken))
         const state = getState()
         dispatch (setCommentsCount(state.commentsCount + 1));
   

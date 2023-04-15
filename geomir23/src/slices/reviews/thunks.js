@@ -66,23 +66,25 @@ export const delReview = (review, authToken) => {
     };
 };
 
-export const addReview =  ( place_id, review, authToken) => {
-    console.log(review)
-    return async (dispatch, getState) => {
-    const data = await fetch(
-      "https://backend.insjoaquimmir.cat/api/places/"+place_id+"/reviews",
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          //'Content-type': 'multipart/form-data',
-          Authorization: "Bearer " + authToken,
-        },
-        method: "POST",
-        // body: JSON.stringify({ name,description,upload,latitude,longitude,visibility })
-        body: JSON.stringify({ review }),
-      }
-    );
+// export const addReview =  ( place_id, review, authToken) => {
+  export const addReview =  (dataWithId) => {
+
+    return async (dispatch,getState) => {
+      const {review,id,authToken} = dataWithId;
+      console.log(dataWithId.review);
+      console.log(dataWithId.id);
+      const data = await fetch(
+          "https://backend.insjoaquimmir.cat/api/places/" + id +"/reviews",
+          {
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + authToken,
+              },
+              method: "POST",
+              body: JSON.stringify({review})
+          }
+      );
     const resposta = await data.json();
     console.log(resposta);
     
@@ -90,7 +92,7 @@ export const addReview =  ( place_id, review, authToken) => {
         dispatch (setAdd(false));
         console.log("Todo bien"); 
         dispatch(setReviews(review))
-        dispatch (getReviews(0,place_id,authToken))
+        dispatch (getReviews(0,id,authToken))
         const state = getState()
         dispatch (setReviewsCount(state.reviewsCount + 1));
   

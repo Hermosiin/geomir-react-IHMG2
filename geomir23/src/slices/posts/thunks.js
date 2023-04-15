@@ -55,10 +55,13 @@ export const getPosts = (authToken,page = 0) => {
     }
 }
 
-export const addPost = (formulari, authToken) => {
+// export const addPost = (formulari, authToken) => {
+    export const addPost = (data2, authToken) => {
     return async (dispatch, getState) => {
+        dispatch(startLoadingPosts());
 
-    let { body, upload, latitude, longitude, visibility } = formulari;
+    // let { body, upload, latitude, longitude, visibility } = formulari;
+    let { body, upload, latitude, longitude, visibility } = data2;
     const formData = new FormData();
         
     formData.append("body", body);
@@ -67,21 +70,24 @@ export const addPost = (formulari, authToken) => {
     formData.append("longitude", longitude);
     formData.append("visibility", visibility);
 
-    const data = await fetch(
-      "https://backend.insjoaquimmir.cat/api/posts/",
-      {
+    const headers = {
+
         headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + authToken,
+            Accept: "application/json",
+            Authorization: "Bearer " + authToken,
         },
         method: "POST",
-        body: formData,
-      }
-    );
+        body: formData
+    };
+    const url = "https://backend.insjoaquimmir.cat/api/posts";
+
+    const data = await fetch(url, headers);
+    
     const resposta = await data.json();
 
     if (resposta.success == true) {
         console.log("Post Creat");
+        dispatch(getPosts(authToken));
     } else {
         setError(resposta.message);
     }

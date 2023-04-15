@@ -3,23 +3,43 @@ import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../usercontext";
 import { CommentsContext } from "./commentsContext";
-import { useForm } from '../../hooks/useForm';
+// import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from "react-redux";
 import { addComment, getComments } from "../../slices/comments/thunks";
+
+import { useForm } from "react-hook-form";
  
 export const CommentAdd = ({ id }) => {
   const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { comments = [], page=0, isLoading=true, add=true, error="", commentsCount=0 } = useSelector((state) => state.comments);
+  // const { comments = [], page=0, isLoading=true, add=true, error="", commentsCount=0 } = useSelector((state) => state.comments);
   const dispatch = useDispatch();
-    const { formState, onInputChange, onResetForm} = useForm({
-      comment: "",      
-      });
+  const { register, handleSubmit,reset,formState: { errors }} = useForm();
+  
+  // const dispatch = useDispatch();
+  //   const { formState, onInputChange, onResetForm} = useForm({
+  //     comment: "",      
+  //     });
       
-      const { comment} = formState
+  //     const { comment} = formState
 
-  useEffect(()=>{
-    dispatch(getComments(0,id,authToken,usuari));
-  },[]);
+  // useEffect(()=>{
+  //   dispatch(getComments(0,id,authToken,usuari));
+  // },[]);
+
+  const onSubmit = (formData) => {
+    const dataWithId = {
+      id: id,
+      authToken: authToken,
+      ...formData,
+    };
+    console.log(dataWithId);
+    dispatch(addComment(dataWithId));
+    dispatch(addComment(false));
+  };
+
+  useEffect(() => {
+    addComment();
+  }, [])
  
   return (
     <>
@@ -31,12 +51,27 @@ export const CommentAdd = ({ id }) => {
             </h2>
             <div class="w-full md:w-full px-3 mb-2 mt-2">
               <textarea
-               onChange={onInputChange} value={comment}
+              //  onChange={onInputChange} value={comment}
                 class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
                 name="comment"
                 placeholder="Escriu el teu comentari"
                 required
+                {...register("comment",{
+                  minLength: {
+                      value: 20,
+                      message: "El comment ha de tenir almenys 20 caràcters"
+                  },
+                  maxLength: {
+                      value: 200,
+                      message: "El comment ha de tenir com a màxim 200 caràcters"
+                  },
+                  pattern: {
+                      value: /^\S+(?:\s+\S+){2,}$/,
+                      message:"El comment ha de contenir almenys 3 paraules"
+                  }
+                })}
               ></textarea>
+              {errors.comment && <p>{errors.comment.message}</p>}
             </div>
             <div class="w-full md:w-full flex items-start md:w-full px-3">
               <div class="flex items-start w-1/2 text-gray-700 px-2 mr-auto">
@@ -57,7 +92,8 @@ export const CommentAdd = ({ id }) => {
               </div>
               <div class="-mr-1">
                 <input
-                  onClick={(e) =>dispatch( addComment(id,comment,authToken)) }
+                  // onClick={(e) =>dispatch( addComment(id,comment,authToken)) }
+                  onClick={handleSubmit(onSubmit)}
                   type="button"
                   class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100"
                   value="Post comment"

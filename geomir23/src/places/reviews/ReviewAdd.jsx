@@ -3,23 +3,43 @@ import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../usercontext";
 import { ReviewsContext } from "./reviewsContext";
-import { useForm } from '../../hooks/useForm';
+// import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from "react-redux";
 import { addReview, getReviews } from "../../slices/reviews/thunks";
- 
+
+import { useForm } from "react-hook-form";
+
 export const ReviewAdd = ({ id }) => {
   const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
-  const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
+  // const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
-    const { formState, onInputChange, onResetForm} = useForm({
-      review: "",      
-      });
-      
-      const { review} = formState
+  const { register, handleSubmit,reset,formState: { errors }} = useForm();
 
-  useEffect(()=>{
-    dispatch(getReviews(0,id,authToken,usuari));
-  },[]);
+  // const dispatch = useDispatch();
+  //   const { formState, onInputChange, onResetForm} = useForm({
+  //     review: "",      
+  //     });
+      
+  //     const { review} = formState
+
+  // useEffect(()=>{
+  //   dispatch(getReviews(0,id,authToken,usuari));
+  // },[]);
+
+  const onSubmit = (formData) => {
+    const dataWithId = {
+      id: id,
+      authToken: authToken,
+      ...formData,
+    };
+    console.log(dataWithId);
+    dispatch(addReview(dataWithId));
+    dispatch(addReview(false));
+  };
+
+  useEffect(() => {
+    addReview();
+  }, [])
  
   return (
     <>
@@ -31,12 +51,27 @@ export const ReviewAdd = ({ id }) => {
             </h2>
             <div class="w-full md:w-full px-3 mb-2 mt-2">
               <textarea
-               onChange={onInputChange} value={review}
+              //  onChange={onInputChange} value={review}
                 class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
                 name="review"
                 placeholder="Escriu el teu comentari"
                 required
+                {...register("review",{
+                  minLength: {
+                      value: 20,
+                      message: "La review ha de tenir almenys 20 caràcters"
+                  },
+                  maxLength: {
+                      value: 200,
+                      message: "La review ha de tenir com a màxim 200 caràcters"
+                  },
+                  pattern: {
+                      value: /^\S+(?:\s+\S+){2,}$/,
+                      message:"La review ha de contenir almenys 3 paraules"
+                  }
+                })}
               ></textarea>
+              {errors.review && <p>{errors.review.message}</p>}
             </div>
             <div class="w-full md:w-full flex items-start md:w-full px-3">
               <div class="flex items-start w-1/2 text-gray-700 px-2 mr-auto">
@@ -57,7 +92,8 @@ export const ReviewAdd = ({ id }) => {
               </div>
               <div class="-mr-1">
                 <input
-                  onClick={(e) =>dispatch( addReview(id,review,authToken)) }
+                  // onClick={(e) =>dispatch( addReview(id,review,authToken)) }
+                  onClick={handleSubmit(onSubmit)}
                   type="button"
                   class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100"
                   value="Place review"
