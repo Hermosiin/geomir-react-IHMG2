@@ -1,7 +1,7 @@
 import React from 'react'
 import { useContext } from 'react';
 import { useState } from 'react';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 import 'leaflet/dist/leaflet.css';
 
 import "../App.css"
@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 export const PlacesAdd = () => {
 
   
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { places = [], page=0, error="", isLoading=true } = useSelector((state) => state.places);
   const dispatch = useDispatch();
   let navigate = useNavigate();

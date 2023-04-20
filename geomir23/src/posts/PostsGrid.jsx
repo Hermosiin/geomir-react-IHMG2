@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { userContext } from "../userContext";
+import { UserContext } from "../userContext";
 import { useFetch } from "../hooks/useFetch";
 
 import { PostGrid } from "./PostGrid";
@@ -11,7 +11,7 @@ import { getPosts } from "../slices/posts/thunks";
 import { Paginate } from "./Paginate";
 
 export const PostsGrid = () => {
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { posts = [], page, isLoading=true, error="", filter } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 

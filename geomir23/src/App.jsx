@@ -4,7 +4,7 @@ import { LoginRegister } from './auth/LoginRegister'
 import { useState } from 'react'
 //import { createContext } from 'react'
 
-import { userContext } from './userContext'
+import { UserContext } from './userContext'
 import { Routes,Route } from 'react-router-dom'
 import { Header } from './components/layout/Header'
 import { Footer } from './components/layout/Footer'
@@ -51,7 +51,7 @@ function App() {
   return (
    <>
 
-    <userContext.Provider value= { { usuari, setUsuari,authToken,setAuthToken, idUsuari, setIdUsuari }}>
+    <UserContext.Provider value= { { usuari, setUsuari,authToken,setAuthToken, idUsuari, setIdUsuari }}>
       
       { authToken != "" ? (
       
@@ -91,7 +91,7 @@ function App() {
 
     ) :  <LoginRegister /> }
     
-    </userContext.Provider>
+    </UserContext.Provider>
 
       {/* <LoginRegister/> */}
    </>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { useState } from "react";
-import { userContext } from "../userContext";
+import { UserContext } from "../userContext";
 import "leaflet/dist/leaflet.css";
 
 import "../App.css";
@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 
 export const PostsAdd = () => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { posts = [], page=0, error="", isLoading=true } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 

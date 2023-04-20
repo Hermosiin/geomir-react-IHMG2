@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 import { delPlace } from '../slices/places/thunks';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const PlaceGrid = ({v} ) => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { places = [], page=0, isLoading=true, error="", favorites } = useSelector((state) => state.places);
   const dispatch = useDispatch();
   

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { userContext } from "../userContext";
+import { UserContext } from "../userContext";
 
 import { PostList } from "./PostList";
 import { useFetch } from "../hooks/useFetch";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../slices/posts/thunks";
 
 export const PostsList = () => {
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { posts = [], page=0, isLoading=true, error="", filter } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 

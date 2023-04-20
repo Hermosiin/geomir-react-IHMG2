@@ -2,11 +2,11 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import { userContext } from '../../userContext';
+import { UserContext } from '../../userContext';
 
 export const Header = () => {
 
-    let { authToken,setAuthToken } = useContext(userContext)
+    let { authToken,setAuthToken } = useContext(UserContext)
     let [ usuari,setUsuari] = useState("")
     let [ roles, setRoles] = useState([]);
     

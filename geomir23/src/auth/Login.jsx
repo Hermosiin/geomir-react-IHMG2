@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useState } from 'react';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 // import { useForm } from '../hooks/useForm';
 import { useLogin } from '../hooks/useLogin';
 import { useForm } from "react-hook-form";
@@ -10,7 +10,7 @@ export const Login = ({ setLogin }) => {
   // Implementem codi de gestió 
 //   let [ error, setError] = useState("");
    
-  let { usuari, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
 
 //   const { formState, onInputChange } = useForm({
 //     email: "",

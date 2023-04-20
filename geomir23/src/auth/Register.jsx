@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useContext } from 'react';
 // import { useForm } from '../hooks/useForm';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 
 import { useForm } from "react-hook-form"; 
 import { useLogin } from '../hooks/useLogin';
@@ -9,7 +9,7 @@ import { useLogin } from '../hooks/useLogin';
 export const Register = ({ setLogin }) => {
 
     let [ error, setError2] = useState("");
-    let { usuari, setUsuari, authToken, setAuthToken } = useContext(userContext);
+    let { usuari, setUsuari, authToken, setAuthToken } = useContext(UserContext);
 
     // const { formState, onInputChange } = useForm({
     //     name: "",

@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { userContext } from "../../userContext";
+import { UserContext } from "../../userContext";
 import { CommentsContext } from "./commentsContext";
 
 import TimeAgo from "react-timeago";
@@ -10,7 +10,7 @@ import { addComment, delComment } from "../../slices/comments/thunks";
 import { useDispatch, useSelector } from "react-redux";
 
 export const Comment = ({ comment }) => {
-  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
  const { comments = [], page=0, isLoading=true, add=true, error="", commentsCount=0 } = useSelector((state) => state.comments);
  const dispatch = useDispatch();
   const formatter = buildFormatter(catStrings);

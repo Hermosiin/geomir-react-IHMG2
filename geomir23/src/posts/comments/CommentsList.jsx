@@ -3,7 +3,7 @@ import React from "react";
   import { Comment } from "./Comment";
 
   import { useContext } from "react";
-  import { userContext } from "../../userContext";
+  import { UserContext } from "../../userContext";
 
   import { useState } from "react";
   import { CommentAdd } from "./CommentAdd";
@@ -16,7 +16,7 @@ import React from "react";
   // Fem servir un context únicament dins de tots els components de Comments
 
   export const CommentsList = ({ id, comments_count }) => {
-    const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(userContext);
+    const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
     const { comments = [], page=0, isLoading=true, add=true, error="", commentsCount=0 } = useSelector((state) => state.comments);
     const dispatch = useDispatch();
 

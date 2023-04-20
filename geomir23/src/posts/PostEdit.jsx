@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 import { useContext } from 'react'
 import { Navigate, useParams } from 'react-router-dom';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 import { useNavigate } from 'react-router';
 
 import { getPost, editPost } from '../slices/posts/thunks';
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export const PostEdit = () => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { post, page=0, error="", isLoading=true } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 

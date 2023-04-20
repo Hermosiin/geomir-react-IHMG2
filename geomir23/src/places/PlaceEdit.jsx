@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 import { useContext } from 'react'
 import { Navigate, useParams } from 'react-router-dom';
-import { userContext } from '../userContext';
+import { UserContext } from '../userContext';
 import { useNavigate } from 'react-router';
 
 import { getPlace, editPlace } from '../slices/places/thunks';
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export const PlaceEdit = () => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { place, page=0, error="", isLoading=true } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 

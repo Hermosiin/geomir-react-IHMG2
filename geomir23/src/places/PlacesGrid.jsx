@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { userContext } from "../userContext";
+import { UserContext } from "../userContext";
 import { useFetch } from "../hooks/useFetch";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import { PlaceGrid } from "./PlaceGrid";
 import { Paginate } from "./Paginate";
 
 export const PlacesGrid = () => {
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
   const { places = [], page, isLoading=true, error="", filter } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 
