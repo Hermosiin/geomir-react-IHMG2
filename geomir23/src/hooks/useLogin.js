@@ -1,9 +1,9 @@
-import { UserContext } from "../usercontext";
+import { userContext } from "../userContext";
 import { useEffect, useContext } from "react";
 
 export const useLogin = () => {
 
-    let { usuari, setUsuari, authToken, setAuthToken, idUsuari, setIdUsuari } = useContext(UserContext);
+    let { usuari, setUsuari, authToken, setAuthToken, idUsuari, setIdUsuari } = useContext(userContext);
 
     const checkAuthToken = () => {
 
