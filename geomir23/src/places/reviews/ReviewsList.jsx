@@ -3,7 +3,7 @@ import React from "react";
   import { Review } from "./Review";
 
   import { useContext } from "react";
-  import { UserContext } from "../../usercontext";
+  import { userContext } from "../../userContext";
 
   import { useState } from "react";
   import { ReviewAdd } from "./ReviewAdd";
@@ -16,7 +16,7 @@ import React from "react";
   // Fem servir un context únicament dins de tots els components de Reviews
 
   export const ReviewsList = ({ id, reviews_count }) => {
-    const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
+    const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(userContext);
     const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
     const dispatch = useDispatch();
 

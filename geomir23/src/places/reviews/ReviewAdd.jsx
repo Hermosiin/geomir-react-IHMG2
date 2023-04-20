@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../../usercontext";
+import { userContext } from "../../userContext";
 import { ReviewsContext } from "./reviewsContext";
 // import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import { addReview, getReviews } from "../../slices/reviews/thunks";
 import { useForm } from "react-hook-form";
 
 export const ReviewAdd = ({ id }) => {
-  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(userContext);
   // const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
   const { register, handleSubmit,reset,formState: { errors }} = useForm();

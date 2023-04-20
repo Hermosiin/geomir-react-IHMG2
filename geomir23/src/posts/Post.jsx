@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { UserContext } from "../usercontext";
+import { userContext } from "../userContext";
 import "leaflet/dist/leaflet.css";
 
 import "../App.css";
@@ -18,7 +18,7 @@ import { getPost, like, unlike, delPost, editPost } from "../slices/posts/thunks
 
 export const Post = () => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
   const { post, page=0, error="", isLoading=true, likes, liked } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 

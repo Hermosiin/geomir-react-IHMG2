@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react';
-import { UserContext } from '../usercontext';
+import { userContext } from '../userContext';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { delPlace } from '../slices/places/thunks';
 
 export const PlaceList = ({v}) => {
   
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
   const { places = [], page=0, isLoading=true, error="" } = useSelector((state) => state.places);
   const dispatch = useDispatch();
     return (

@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react';
-import { UserContext } from '../usercontext';
+import { userContext } from '../userContext';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { delPost } from '../slices/posts/thunks';
 
 export const PostList = ({v, deletePost}) => {
   
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
   const { posts = [], page=0, isLoading=true, error="" } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
     return (

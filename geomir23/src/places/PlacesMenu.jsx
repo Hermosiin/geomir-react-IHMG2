@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from "react-redux";
-import { UserContext } from '../usercontext';
+import { userContext } from '../userContext';
 import { useForm } from '../hooks/useForm';
 import { setFilter } from '../slices/places/placeSlice';
 
@@ -16,7 +16,7 @@ export const PlacesMenu = () => {
     const { formState, onInputChange, onResetForm } = useForm({
       search: "",
     });  
-    let { idUsuari } = useContext(UserContext);
+    let { idUsuari } = useContext(userContext);
     const { filter } = useSelector((state) => state.places);
     const { search } = formState;
 

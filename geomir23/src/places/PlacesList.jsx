@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../usercontext";
+import { userContext } from "../userContext";
 
 import { PlacesAdd } from "./PlacesAdd";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPlaces } from "../slices/places/thunks";
 
 export const PlacesList = () => {
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
   const { places = [], page=0, isLoading=true, error="", filter } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 

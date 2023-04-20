@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { UserContext } from "../usercontext";
+import { userContext } from "../userContext";
 import "leaflet/dist/leaflet.css";
 import "../App.css";
 import { ReviewsList } from "./reviews/ReviewsList";
@@ -15,7 +15,7 @@ import { getPlace, favourite, unfavourite, delPlace, editPlace } from "../slices
 
 export const Place = () => {
 
-  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email, setUsuari, authToken, setAuthToken } = useContext(userContext);
   const { place, page=0, error="", isLoading=true, favorites, favorited } = useSelector((state) => state.places);
   const dispatch = useDispatch();
 

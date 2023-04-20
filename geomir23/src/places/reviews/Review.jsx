@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { UserContext } from "../../usercontext";
+import { userContext } from "../../userContext";
 import { ReviewsContext } from "./reviewsContext";
 
 import TimeAgo from "react-timeago";
@@ -10,7 +10,7 @@ import { addReview, delReview } from "../../slices/reviews/thunks";
 import { useDispatch, useSelector } from "react-redux";
 
 export const Review = ({ review }) => {
-  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(UserContext);
+  const { usuari, email,setUsuari, authToken, setAuthToken } = useContext(userContext);
  const { reviews = [], page=0, isLoading=true, add=true, error="", reviewsCount=0 } = useSelector((state) => state.reviews);
  const dispatch = useDispatch();
   const formatter = buildFormatter(catStrings);
